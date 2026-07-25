@@ -12,7 +12,7 @@ app.get('/api', async (req, res) => {
             return res.status(400).json({ error: 'Missing url parameter' });
         }
 
-        // Передаём все заголовки от клиента
+        // Копируем все заголовки от клиента
         const headers = { ...req.headers };
         delete headers.host;
         delete headers.connection;
@@ -30,4 +30,4 @@ app.get('/api', async (req, res) => {
     }
 });
 
-app.listen(3000, () => console.log('✅ Сервер запущен!'));
+app.listen(3000, () => console.log('✅ Сервер запущен на порту 3000!'));
