@@ -11,12 +11,16 @@ app.get('/api/*', async (req, res) => {
         console.log('📤 Запрос к API:', url);
 
         const response = await fetch(url, {
-            headers: { 'X-Auth-Token': '9ec6d6fe53864e81b6ca7f802926e838' }
+            headers: {
+                'X-Auth-Token': '9ec6d6fe53864e81b6ca7f802926e838'
+            }
         });
 
         const data = await response.json();
         console.log('📥 Ответ получен, статус:', response.status);
-        res.json(data);
+
+        // ПРОБРАСЫВАЕМ ТОЧНЫЙ СТАТУС И ДАННЫЕ
+        res.status(response.status).json(data);
 
     } catch (error) {
         console.error('❌ Ошибка:', error.message);
