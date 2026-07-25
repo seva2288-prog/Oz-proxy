@@ -5,22 +5,24 @@ const cors = require('cors');
 const app = express();
 app.use(cors());
 
-app.get('/api/*', async (req, res) => {
+app.get('/api', async (req, res) => {
     try {
-        const url = 'https://api.football-data.org/v4' + req.url.replace('/api', '');
-        console.log('📤 Запрос к API:', url);
+        const targetUrl = req.query.url;
+        if (!targetUrl) {
+            return res.status(400).json({ error: 'Missing url parameter' });
+        }
 
-        const response = await fetch(url, {
-            headers: {
-                'X-Auth-Token': '9ec6d6fe53864e81b6ca7f802926e838'
-            }
+        // Передаём все заголовки от клиента
+        const headers = { ...req.headers };
+        delete headers.host;
+        delete headers.connection;
+
+        const response = await fetch(targetUrl, {
+            headers: headers
         });
 
         const data = await response.json();
-        console.log('📥 Ответ получен, статус:', response.status);
-
-        // ПРОБРАСЫВАЕМ ТОЧНЫЙ СТАТУС И ДАННЫЕ
-        res.status(response.status).json(data);
+        res.json(data);
 
     } catch (error) {
         console.error('❌ Ошибка:', error.message);
